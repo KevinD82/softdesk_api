@@ -86,11 +86,14 @@ Body (JSON) :
 Réponse : Retourne un jeton access et un jeton refresh.3. Rafraîchissement du Token (POST /api/token/refresh/)Body (JSON) :JSON{
     "refresh": "<VOTRE_REFRESH_TOKEN>"
 }
+```
+
 📐 Structure Actuelle des Modèles (projects/models.py)
 - User (Custom) : username, email, birth_date, can_be_contacted, can_data_be_shared
 - Project : name, description, type (Backend, Frontend, iOS, Android), author
 - Contributor : Relation unique user $\leftrightarrow$ project
 - Issue : title, description, priority, tag, status, project, author, assigned_to
 - Comment : description, issue, author
----
+```
 
+---
