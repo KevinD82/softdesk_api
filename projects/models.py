@@ -3,28 +3,40 @@ from django.db import models
 
 
 class Project(models.Model):
-    TYPE_CHOICES = [
-        ('BACKEND', 'Back-end'),
-        ('FRONTEND', 'Front-end'),
-        ('IOS', 'iOS'),
-        ('ANDROID', 'Android'),
-    ]
+    """
+    Modèle représentant un projet dans l'application SoftDesk.
+
+    Chaque projet possède un nom, une description, un type (ex: Backend, Frontend),
+    un auteur (l'utilisateur qui l'a créé) et une date de création.
+    """
+
+    class TypeChoices(models.TextChoices):
+        BACKEND = 'BACKEND', 'Back-end'
+        FRONTEND = 'FRONTEND', 'Front-end'
+        IOS = 'IOS', 'iOS'
+        ANDROID = 'ANDROID', 'Android'
 
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
-    type = models.CharField(max_length=10, choices=TYPE_CHOICES)
+    type = models.CharField(max_length=10, choices=TypeChoices.choices)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='authored_projects',
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_time = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
 class Contributor(models.Model):
+    """
+    Table de liaison représentant l'appartenance d'un utilisateur à un projet.
+
+    Permet d'accorder des droits d'accès/lecture/écriture aux membres enregistrés.
+    """
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -38,42 +50,56 @@ class Contributor(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'project')
+        constraints = (
+            models.UniqueConstraint(
+                fields=['user', 'project'],
+                name='unique_user_project_contributor',
+            ),
+        )
 
-    def __str__(self):
-        return f"{self.user.username} -> {self.project.name}"
+    def __str__(self) -> str:
+        username = getattr(self.user, 'username', 'Inconnu')
+        project_name = getattr(self.project, 'name', 'Inconnu')
+        return f"{username} -> {project_name}"
 
 
 class Issue(models.Model):
-    PRIORITY_CHOICES = [
-        ('LOW', 'Faible'),
-        ('MEDIUM', 'Moyenne'),
-        ('HIGH', 'Élevée'),
-    ]
+    """
+    Modèle représentant un ticket (problème, tâche ou fonctionnalité) rattaché à un projet.
+    """
 
-    TAG_CHOICES = [
-        ('BUG', 'Bug'),
-        ('FEATURE', 'Fonctionnalité'),
-        ('TASK', 'Tâche'),
-    ]
+    class PriorityChoices(models.TextChoices):
+        LOW = 'LOW', 'Faible'
+        MEDIUM = 'MEDIUM', 'Moyenne'
+        HIGH = 'HIGH', 'Élevée'
 
-    STATUS_CHOICES = [
-        ('TO_DO', 'À faire'),
-        ('IN_PROGRESS', 'En cours'),
-        ('FINISHED', 'Terminé'),
-    ]
+    class TagChoices(models.TextChoices):
+        BUG = 'BUG', 'Bug'
+        FEATURE = 'FEATURE', 'Fonctionnalité'
+        TASK = 'TASK', 'Tâche'
+
+    class StatusChoices(models.TextChoices):
+        TO_DO = 'TO_DO', 'À faire'
+        IN_PROGRESS = 'IN_PROGRESS', 'En cours'
+        FINISHED = 'FINISHED', 'Terminé'
 
     title = models.CharField(max_length=128)
     description = models.TextField()
     priority = models.CharField(
-        max_length=10, choices=PRIORITY_CHOICES, default='MEDIUM'
+        max_length=10,
+        choices=PriorityChoices.choices,
+        default=PriorityChoices.MEDIUM,
     )
-    tag = models.CharField(max_length=10, choices=TAG_CHOICES)
+    tag = models.CharField(max_length=10, choices=TagChoices.choices)
     status = models.CharField(
-        max_length=15, choices=STATUS_CHOICES, default='TO_DO'
+        max_length=15,
+        choices=StatusChoices.choices,
+        default=StatusChoices.TO_DO,
     )
     project = models.ForeignKey(
-        Project, on_delete=models.CASCADE, related_name='issues'
+        Project,
+        on_delete=models.CASCADE,
+        related_name='issues',
     )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -89,14 +115,20 @@ class Issue(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
 
 class Comment(models.Model):
+    """
+    Modèle représentant un commentaire posté sur un ticket (Issue) spécifique.
+    """
+
     description = models.TextField()
     issue = models.ForeignKey(
-        Issue, on_delete=models.CASCADE, related_name='comments'
+        Issue,
+        on_delete=models.CASCADE,
+        related_name='comments',
     )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -105,5 +137,7 @@ class Comment(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"Commentaire de {self.author.username} sur {self.issue.title}"
+    def __str__(self) -> str:
+        username = getattr(self.author, 'username', 'Inconnu')
+        issue_title = getattr(self.issue, 'title', 'Inconnu')
+        return f"Commentaire de {username} sur {issue_title}"

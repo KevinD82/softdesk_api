@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -122,3 +123,25 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 AUTH_USER_MODEL = 'authentication.User'
+
+# -----------------------------------------------------------------------------
+# Configuration de Django REST Framework & SimpleJWT
+# -----------------------------------------------------------------------------
+
+REST_FRAMEWORK = {
+    # Force DRF à utiliser SimpleJWT pour décoder l'en-tête Authorization: Bearer <token>
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    # Exige une authentification par défaut pour l'ensemble de l'API
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
+
+SIMPLE_JWT = {
+    # Durée de validité du token d'accès (ici configurée à 1 jour pour faciliter tes tests)
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}

@@ -1,16 +1,19 @@
-from datetime import date
+from typing import Any, ClassVar
 
+from django.utils import timezone
 from rest_framework import serializers
 
 from authentication.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    """
+    Sérialiseur pour la création et la gestion des utilisateurs.
+    """
 
     class Meta:
         model = User
-        fields = [
+        fields = (
             'id',
             'username',
             'email',
@@ -18,11 +21,13 @@ class UserSerializer(serializers.ModelSerializer):
             'birth_date',
             'can_be_contacted',
             'can_data_be_shared',
-        ]
+        )
+        # Annotation ClassVar pour indiquer à Ruff que le dictionnaire est une constante de classe
+        extra_kwargs: ClassVar[dict[str, Any]] = {'password': {'write_only': True}}
 
     def validate_birth_date(self, value):
         if value:
-            today = date.today()
+            today = timezone.now().date()
             age = (
                 today.year
                 - value.year
@@ -35,12 +40,4 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data.get('email', ''),
-            password=validated_data['password'],
-            birth_date=validated_data.get('birth_date'),
-            can_be_contacted=validated_data.get('can_be_contacted', False),
-            can_data_be_shared=validated_data.get('can_data_be_shared', False),
-        )
-        return user
+        return User.objects.create_user(**validated_data)
