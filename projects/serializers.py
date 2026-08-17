@@ -14,8 +14,8 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = '__all__'
-        read_only_fields = ('id', 'author', 'created_time')
+        fields = "__all__"
+        read_only_fields = ("id", "author", "created_time")
 
 
 class ContributorSerializer(serializers.ModelSerializer):
@@ -23,12 +23,12 @@ class ContributorSerializer(serializers.ModelSerializer):
     Sérialiseur pour la gestion des membres rattachés à un projet.
     """
 
-    user_detail = UserSerializer(source='user', read_only=True)
+    user_detail = UserSerializer(source="user", read_only=True)
 
     class Meta:
         model = Contributor
-        fields = '__all__'
-        read_only_fields = ('id', 'project', 'created_at')
+        fields = "__all__"
+        read_only_fields = ("id", "project", "created_time")
 
 
 class IssueSerializer(serializers.ModelSerializer):
@@ -41,8 +41,8 @@ class IssueSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Issue
-        fields = '__all__'
-        read_only_fields = ('id', 'project', 'author', 'created_at')
+        fields = "__all__"
+        read_only_fields = ("id", "project", "author", "created_time")
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -54,5 +54,5 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = '__all__'
-        read_only_fields = ('id', 'issue', 'author', 'created_at')
+        fields = "__all__"
+        read_only_fields = ("id", "uuid", "issue", "author", "created_time")

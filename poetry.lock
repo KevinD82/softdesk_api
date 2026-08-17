@@ -109,6 +109,21 @@ files = [
 crypto = ["cryptography (>=3.4.0)"]
 
 [[package]]
+name = "python-dotenv"
+version = "1.2.3"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "python_dotenv-1.2.3-py3-none-any.whl", hash = "sha256:904552145e8bfed22162c09dab1c2b9b54fefa7b23ba780f4f26ca0316b0f0d9"},
+    {file = "python_dotenv-1.2.3.tar.gz", hash = "sha256:a20a594dabeaa385725aa239d5244871c143ecb356add8a20fcf23773a6c3a35"},
+]
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
 name = "ruff"
 version = "0.16.1"
 description = "An extremely fast Python linter and code formatter, written in Rust."
@@ -168,4 +183,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "310f72f7bddddbe74a92f21602a068b20f8396055a4a7e262f77c79ee3d855bd"
+content-hash = "58427a5c64a21f6e2c2530a0571566b417866f2fdbcb78b9ebb5f30de0363c36"
