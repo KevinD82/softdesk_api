@@ -28,6 +28,9 @@ class Project(models.Model):
     )
     created_time = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ("-created_time",)
+
     def __str__(self) -> str:
         return self.name
 
@@ -52,6 +55,7 @@ class Contributor(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        ordering = ("-created_time",)
         constraints = (
             models.UniqueConstraint(
                 fields=["user", "project"],
@@ -117,6 +121,9 @@ class Issue(models.Model):
     )
     created_time = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ("-created_time",)
+
     def __str__(self) -> str:
         return self.title
 
@@ -126,7 +133,11 @@ class Comment(models.Model):
     Modèle représentant un commentaire posté sur un ticket (Issue) spécifique.
     """
 
-    uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    uuid = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     description = models.TextField()
     issue = models.ForeignKey(
         Issue,
@@ -139,6 +150,9 @@ class Comment(models.Model):
         related_name="authored_comments",
     )
     created_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("-created_time",)
 
     def __str__(self) -> str:
         username = getattr(self.author, "username", "Inconnu")
