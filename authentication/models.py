@@ -16,7 +16,6 @@ class User(AbstractUser):
     def clean(self) -> None:
         super().clean()
         if self.birth_date:
-            # Correction DTZ011 : timezone.now().date() à la place de date.today()
             today = timezone.now().date()
             age = (
                 today.year
