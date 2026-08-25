@@ -195,9 +195,3 @@ Pour exécuter la suite de tests unitaires :
 ```bash
 poetry run python manage.py test
 ```
-
----
-
-## 📝 Licence
-
-Projet réalisé dans le cadre de la formation OpenClassrooms.
