@@ -147,8 +147,11 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    # Durée de validité du token d'accès (ici configurée à 1 jour pour faciliter tes tests)
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),  # <-- Durée de l'access token
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),  # <-- Durée du refresh token
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
