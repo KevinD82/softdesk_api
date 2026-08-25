@@ -15,7 +15,7 @@ Le projet intègre une authentification JWT conforme aux recommandations OWASP, 
 5. [Endpoints API](#-endpoints-api-principaux)
 6. [Guide de Test Postman](#-guide-de-test-postman)
 7. [Green Code & Optimisations](#-green-code--optimisations)
-8. [Tests & Validation](#-tests--validation)
+8. [Qualité & Tests](#-qualité--tests)
 
 ---
 
@@ -189,6 +189,18 @@ Créez un environnement dans Postman avec les variables suivantes :
 ---
 
 ## 🧪 Tests & Validation
+
+### Contrôle qualité (Ruff)
+
+
+# Vérifier la qualité du code
+```bash
+poetry run ruff check .
+```
+# Formater le code
+```bash
+poetry run ruff format .
+```
 
 Pour exécuter la suite de tests unitaires :
 
