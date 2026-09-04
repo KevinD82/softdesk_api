@@ -45,7 +45,6 @@ cd softdesk_api
 
 ```bash
 poetry install
-poetry shell
 ```
 
 ### 3. Configurer les variables d'environnement
